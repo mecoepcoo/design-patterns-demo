@@ -1,17 +1,18 @@
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
-const gutil = require('gulp-util'); // 使log的输出格式与gulp统一
 const del = require('del');
-const watch = require('gulp-watch');
+const changed = require('gulp-changed');
+const plumber = require('gulp-plumber');
 
 gulp.task('main', () => {
   const tsResult = gulp.src('demos/**/*.ts')
+    .pipe(changed('built'))
+    .pipe(plumber())
     .pipe(ts({
       noImplicitAny: true,
       target: 'ES5',
       // out: 'output.js'
     }))
-    .on('error', showError);
   return tsResult.js.pipe(gulp.dest('built'));
 });
 
@@ -21,15 +22,8 @@ gulp.task('clean', cb => {
   ], cb);
 });
 
-gulp.task('watch', gulp.series(() => {
-  return watch('demos/**/*.ts', () => {
-    gulp.start('default');
-  });
+gulp.task('watch', gulp.series('clean', 'main', () => {
+  gulp.watch('demos/**/*.ts', gulp.series('main'));
 }));
 
 gulp.task('default', gulp.series('clean', 'main'));
-
-function showError(error) {
-  gutil.log(gutil.colors.red('ERROR!'), error.message);
-  this.emit('end');
-}
