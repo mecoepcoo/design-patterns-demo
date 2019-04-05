@@ -23,6 +23,7 @@
     "del": "^4.1.0",
     "gulp": "^4.0.0",
     "gulp-changed": "^3.2.0",
+    "gulp-eslint": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-typescript": "^5.0.1",
     "typescript": "^3.4.1"

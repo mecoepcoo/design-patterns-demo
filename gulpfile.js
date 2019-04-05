@@ -3,6 +3,7 @@ const ts = require('gulp-typescript');
 const del = require('del');
 const changed = require('gulp-changed');
 const plumber = require('gulp-plumber');
+const eslint = require('gulp-eslint');
 
 gulp.task('main', () => {
   const tsResult = gulp.src('demos/**/*.ts')
@@ -16,6 +17,13 @@ gulp.task('main', () => {
   return tsResult.js.pipe(gulp.dest('built'));
 });
 
+gulp.task('lint', () => {
+  return gulp.src('demos/**/*.ts')
+    .pipe(eslint({
+      configFile: './.eslintrc.js'
+    })).pipe(eslint.format())
+});
+
 gulp.task('clean', cb => {
   return del([
     'built/*',
@@ -23,8 +31,8 @@ gulp.task('clean', cb => {
   ], cb);
 });
 
-gulp.task('watch', gulp.series('clean', 'main', () => {
-  gulp.watch('demos/**/*.ts', gulp.series('main'));
+gulp.task('watch', gulp.series('clean', 'main', 'lint', () => {
+  gulp.watch('demos/**/*.ts', gulp.series('main', 'lint'));
 }));
 
 gulp.task('default', gulp.series('clean', 'main'));
