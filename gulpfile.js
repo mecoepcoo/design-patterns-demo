@@ -19,6 +19,7 @@ gulp.task('main', () => {
 gulp.task('clean', cb => {
   return del([
     'built/*',
+    '!built/.gitkeep'
   ], cb);
 });
 
