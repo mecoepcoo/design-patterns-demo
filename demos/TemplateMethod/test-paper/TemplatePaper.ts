@@ -1,4 +1,4 @@
 export default abstract class TemplatePaper {
-  abstract doTest1();
-  abstract doTest2();
+  abstract doTest1(): void;
+  abstract doTest2(): void;
 }
